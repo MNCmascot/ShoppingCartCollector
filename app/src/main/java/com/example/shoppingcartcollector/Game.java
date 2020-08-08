@@ -20,6 +20,7 @@ The Game class manages all objects in the game, as well as updating states and r
 public class Game extends SurfaceView implements SurfaceHolder.Callback{
     private final Player player;
     private final Joystick joystick;
+    private final Cart cart;
     private GameLoop gameLoop;
 
     public Game(Context context) {
@@ -38,7 +39,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         joystick = new Joystick(275, 700, 70, 40);
 
         //Initialize player
-        player = new Player(getContext(), 1000, 500, 30);
+        player = new Player(getContext(), joystick,1000, 500, 30);
+
+        //Initialize shopping cart object
+
+        cart = new Cart();
     }
 
 
@@ -122,7 +127,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
     //update game state
     public void update() {
-        player.update(joystick);
+        player.update();
         joystick.update();
     }
 }

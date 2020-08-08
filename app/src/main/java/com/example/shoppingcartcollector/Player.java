@@ -6,22 +6,26 @@ import android.graphics.Paint;
 
 import androidx.core.content.ContextCompat;
 
-public class Player {
+/*
+   Main character of the game, controlled by the joystick.
+   extension of GameObject
+
+
+ */
+
+public class Player extends GameObject{
     private static final double SPEED_PIXELS_PER_SECOND = 400.0; //actual speed value
     //determine max speed based on how many pixels we get per update (PIXELS / UPDATE)
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
-    private double positionX;
-    private double positionY;
+
+    private final Joystick joystick;
     private double radius;
     private Paint paint;
-    private double velocityX;
-    private double velocityY;
 
-    public Player(Context context, double positionX, double positionY, double radius) {
-        this.positionX = positionX;
-        this.positionY = positionY;
+    public Player(Context context, Joystick joystick, double positionX, double positionY, double radius) {
+        super(positionX, positionY);
+        this.joystick = joystick;
         this.radius = radius;
-
         paint = new Paint();
         int colour = ContextCompat.getColor(context, R.color.player);
         paint.setColor(colour);
@@ -32,9 +36,12 @@ public class Player {
         canvas.drawCircle((float)positionX, (float)positionY, (float)radius, paint);
     }
 
-    public void update(Joystick joystick) {
+    public void update() {
+        //update velocity based on actuator of Joystick
         velocityX = joystick.getActuatorX()*MAX_SPEED;
         velocityY = joystick.getActuatorY()*MAX_SPEED;
+
+        //update position
         positionX += velocityX;
         positionY += velocityY;
     }
