@@ -1,16 +1,19 @@
-package com.example.shoppingcartcollector;
+package com.example.shoppingcartcollector.object;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
+
+import com.example.shoppingcartcollector.GameLoop;
+import com.example.shoppingcartcollector.Joystick;
+import com.example.shoppingcartcollector.R;
 
 /*
    Main character of the game, controlled by the joystick.
    extension of GameObject
-
-
  */
 
 public class Player extends GameObject{
@@ -18,6 +21,7 @@ public class Player extends GameObject{
     //determine max speed based on how many pixels we get per update (PIXELS / UPDATE)
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
 
+    protected int cartsCollected = 0;
     private final Joystick joystick;
     private double radius;
     private Paint paint;
@@ -26,15 +30,26 @@ public class Player extends GameObject{
         super(positionX, positionY);
         this.joystick = joystick;
         this.radius = radius;
+        this.cartsCollected = 0;
+
+        //set up player colour
         paint = new Paint();
         int colour = ContextCompat.getColor(context, R.color.player);
         paint.setColor(colour);
 
     }
 
+    public void incrementCartsCollected() {
+        cartsCollected += 1;
+        Log.d("DEBUG", "Carts Collected: " + cartsCollected);
+
+    }
+
     public void draw(Canvas canvas) {
         canvas.drawCircle((float)positionX, (float)positionY, (float)radius, paint);
     }
+
+    public double getRadius() { return radius; }
 
     public void update() {
         //update velocity based on actuator of Joystick
@@ -46,8 +61,4 @@ public class Player extends GameObject{
         positionY += velocityY;
     }
 
-    public void setPosition(double positionX, double positionY) {
-        this.positionX = positionX;
-        this.positionY = positionY;
-    }
 }

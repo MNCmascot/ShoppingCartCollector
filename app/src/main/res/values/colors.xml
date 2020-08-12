@@ -5,4 +5,6 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="cyan">#32E6E6</color>
     <color name="player">#FFFFFF</color>
+    <color name="cart">#626266</color>
+
 </resources>

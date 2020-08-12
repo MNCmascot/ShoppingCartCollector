@@ -6,9 +6,16 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.core.content.ContextCompat;
+
+import com.example.shoppingcartcollector.object.Cart;
+import com.example.shoppingcartcollector.object.GameObject;
+import com.example.shoppingcartcollector.object.Player;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /*
 The Game class manages all objects in the game, as well as updating states and rendering objects to the screen
@@ -20,8 +27,9 @@ The Game class manages all objects in the game, as well as updating states and r
 public class Game extends SurfaceView implements SurfaceHolder.Callback{
     private final Player player;
     private final Joystick joystick;
-    private final Cart cart;
+    //private final Cart cart;
     private GameLoop gameLoop;
+    private List<Cart> cartList = new ArrayList<Cart>();
 
     public Game(Context context) {
         super(context);
@@ -32,7 +40,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
         //Create GameLoop class
         gameLoop = new GameLoop(this, surfaceHolder);
-        setFocusable(true);
 
 
         //initialize Joystick
@@ -42,8 +49,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         player = new Player(getContext(), joystick,1000, 500, 30);
 
         //Initialize shopping cart object
+        //cart = new Cart(getContext(), player,500, 200, 20);
 
-        cart = new Cart();
+
+        setFocusable(true);
     }
 
 
@@ -91,18 +100,25 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
     }
 
+    /*
+    Draw to canvas (displayed in the order from bottom to top. ex: player should not be displayed
+    over the joystick)
+     */
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        //display carts
+        for (Cart cart: cartList) {
+            cart.draw(canvas);
+        }
+        //display player
+        player.draw(canvas);
+        //display joystick
+        joystick.draw(canvas);
         //Display UPS
         drawUPS(canvas);
         //Display FPS
         drawFPS(canvas);
-        //display player
-        player.draw(canvas);
-        //dispay joystick
-        joystick.draw(canvas);
-
     }
 
     //display updates per second
@@ -129,5 +145,30 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     public void update() {
         player.update();
         joystick.update();
+
+        //spawn a new cart if it is time to spawn one
+        if (Cart.readyToSpawn()) {
+            cartList.add(new Cart(getContext(), player, 20));
+        }
+
+        //update each Cart
+        for (Cart cart : cartList) {
+            cart.update();
+        }
+
+        //iterate through cartList to check for collisions with the player
+        Iterator<Cart> cartIterator = cartList.iterator();
+        while (cartIterator.hasNext()) {
+            Cart cartCheck = cartIterator.next();
+            //player has collided with cart (pick it up)
+            if (GameObject.areCirclesColliding(cartCheck, cartCheck.getRadius(),
+                    player, player.getRadius())) {
+                //remove cart if it collides with the player
+                cartIterator.remove();
+                //increase number of carts collected
+                player.incrementCartsCollected();
+            }
+        }
+
     }
 }
