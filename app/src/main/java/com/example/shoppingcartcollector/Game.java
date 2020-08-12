@@ -3,6 +3,7 @@ package com.example.shoppingcartcollector;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -47,9 +48,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
         //Initialize player
         player = new Player(getContext(), joystick,1000, 500, 30);
-
-        //Initialize shopping cart object
-        //cart = new Cart(getContext(), player,500, 200, 20);
 
 
         setFocusable(true);
@@ -107,14 +105,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+
+        //display joystick
+        joystick.draw(canvas);
         //display carts
         for (Cart cart: cartList) {
             cart.draw(canvas);
         }
         //display player
         player.draw(canvas);
-        //display joystick
-        joystick.draw(canvas);
+
         //Display UPS
         drawUPS(canvas);
         //Display FPS
@@ -146,9 +146,35 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         player.update();
         joystick.update();
 
+        /*
         //spawn a new cart if it is time to spawn one
+        //make sure it is not colliding with the joystick outer circle
+        */
         if (Cart.readyToSpawn()) {
-            cartList.add(new Cart(getContext(), player, 20));
+            Cart tempCart;
+            double distance; //distance between joystick and new cart
+            double distanceToCollision; //distance between radii
+            do { //get another position if new cart is under joystick
+                double tempX = Math.random() * 2000 + 50; //random X location
+                double tempY = Math.random() * 750 + 300; //random Y location
+
+                cartList.add(new Cart(getContext(), player, tempX, tempY, 20));
+                tempCart = cartList.get(cartList.size() - 1); //last cart added
+
+                //distance between new cart and joystick
+                distance = Math.sqrt(
+                        Math.pow(tempCart.getPositionX() - joystick.getOuterCircleCenterPositionX(), 2) +
+                        Math.pow(tempCart.getPositionY() - joystick.getOuterCircleCenterPositionY(), 2)
+                );
+                //distance between radii
+                distanceToCollision = tempCart.getRadius() + joystick.getOuterCircleRadius();
+
+                if (distance < distanceToCollision) { //under joystick, remove cart
+                    cartList.remove(cartList.size()-1);
+                    //Log.d("DEBUG", "Cart under joystick");
+                }
+
+            } while (distance < distanceToCollision);
         }
 
         //update each Cart

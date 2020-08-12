@@ -109,11 +109,14 @@ public class Joystick {
         actuatorY = 0.0;
     }
 
-    public double getActuatorX() {
-        return actuatorX;
-    }
 
-    public double getActuatorY() {
-        return actuatorY;
-    }
+    public int getOuterCircleCenterPositionX() { return outerCircleCenterPositionX; }
+
+    public int getOuterCircleCenterPositionY() { return  outerCircleCenterPositionY; }
+
+    public int getOuterCircleRadius() { return outerCircleRadius; }
+
+    public double getActuatorX() { return actuatorX; }
+
+    public double getActuatorY() { return actuatorY; }
 }

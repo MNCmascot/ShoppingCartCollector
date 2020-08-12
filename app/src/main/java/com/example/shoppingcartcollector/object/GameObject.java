@@ -34,9 +34,9 @@ public abstract class GameObject {
     public abstract void update();
 
     //Get X position of GameObject
-    protected double getPositionX() { return positionX; }
+    public double getPositionX() { return positionX; }
     //Get Y position of GameObject
-    protected double getPositionY() { return positionY; }
+    public double getPositionY() { return positionY; }
 
     //Set position of the GameObject
     public void setPosition(double positionX, double positionY) {
@@ -44,8 +44,8 @@ public abstract class GameObject {
         this.positionY = positionY;
     }
 
-    //Get the distance between to objects
-    protected static double getDistanceBetweenObjects(GameObject obj1, GameObject obj2) {
+    //Get the distance between two objects
+    public static double getDistanceBetweenObjects(GameObject obj1, GameObject obj2) {
         return Math.sqrt(
                 Math.pow(obj2.getPositionX() - obj1.getPositionX(), 2) +
                         Math.pow(obj2.getPositionY() - obj1.getPositionY(), 2)

@@ -38,11 +38,6 @@ public class Cart extends GameObject{
 
     }
 
-    public Cart(Context context, Player player, double radius) {
-        //Call constructor above with random position (not in top section of screen)
-        this(context, player, Math.random()*2000+50, Math.random()*750+300, radius);
-    }
-
     //check if a new cart should spawn based on SPAWNS_PER_MINUTE
     public static boolean readyToSpawn() {
         //ready to spawn another cart
