@@ -28,9 +28,9 @@ The Game class manages all objects in the game, as well as updating states and r
 public class Game extends SurfaceView implements SurfaceHolder.Callback{
     private final Player player;
     private final Joystick joystick;
-    //private final Cart cart;
     private GameLoop gameLoop;
     private List<Cart> cartList = new ArrayList<Cart>();
+    private int joystickPointerId = 0;
 
     public Game(Context context) {
         super(context);
@@ -58,10 +58,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        switch(event.getAction()) {
+        switch(event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
                 //joystick was pressed
                 if (joystick.isPressed((double)event.getX(), (double)event.getY())){
+                    //store ID (to handle multi-touches)
+                    joystickPointerId = event.getPointerId(event.getActionIndex());
+                    // set it as pressed
                     joystick.setIsPressed(true);
                 }
                // player.setPosition((double)event.getX(), (double)event.getY());
@@ -74,9 +78,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
               //  player.setPosition((double)event.getX(), (double)event.getY());
                 return true;
             case MotionEvent.ACTION_UP:
-                //let go of joystick
-                joystick.setIsPressed(false);
-                joystick.resetActuator();
+            case MotionEvent.ACTION_POINTER_UP:
+                if (joystickPointerId == event.getPointerId(event.getActionIndex())){
+                    //let go of joystick
+                    joystick.setIsPressed(false);
+                    joystick.resetActuator();
+                }
+
                 return true;
         }
         return super.onTouchEvent(event);
@@ -162,10 +170,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
                 tempCart = cartList.get(cartList.size() - 1); //last cart added
 
                 //distance between new cart and joystick
-                distance = Math.sqrt(
-                        Math.pow(tempCart.getPositionX() - joystick.getOuterCircleCenterPositionX(), 2) +
-                        Math.pow(tempCart.getPositionY() - joystick.getOuterCircleCenterPositionY(), 2)
-                );
+                distance = Utils.getDistanceBetweenPoints(tempCart.getPositionX(), tempCart.getPositionY(),
+                        joystick.getOuterCircleCenterPositionX(), joystick.getOuterCircleCenterPositionY());
                 //distance between radii
                 distanceToCollision = tempCart.getRadius() + joystick.getOuterCircleRadius();
 

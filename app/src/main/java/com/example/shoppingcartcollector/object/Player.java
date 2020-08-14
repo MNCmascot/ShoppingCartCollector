@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import com.example.shoppingcartcollector.GameLoop;
 import com.example.shoppingcartcollector.Joystick;
 import com.example.shoppingcartcollector.R;
+import com.example.shoppingcartcollector.Utils;
 
 /*
    Main character of the game, controlled by the joystick.
@@ -59,6 +60,11 @@ public class Player extends GameObject{
         //update position
         positionX += velocityX;
         positionY += velocityY;
+
+        //update direction
+        if (velocityX != 0 || velocityY != 0) {
+            double distance = Utils.getDistanceBetweenPoints(0, 0, velocityX, velocityY);
+        }
     }
 
 }
