@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import com.example.shoppingcartcollector.object.Cart;
 import com.example.shoppingcartcollector.object.GameObject;
 import com.example.shoppingcartcollector.object.Player;
+import com.example.shoppingcartcollector.object.Wall;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,6 +31,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     private final Joystick joystick;
     private GameLoop gameLoop;
     private List<Cart> cartList = new ArrayList<Cart>();
+    private List<Wall> wallList = new ArrayList<Wall>();
     private int joystickPointerId = 0;
 
     public Game(Context context) {
@@ -48,6 +50,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
         //Initialize player
         player = new Player(getContext(), joystick,1000, 500, 30);
+
+        //Initialize walls
+        Wall wall1 = new Wall(getContext(), 300, 300, 500, 100);
+        wallList.add(wall1);
 
 
         setFocusable(true);
@@ -122,6 +128,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         }
         //display player
         player.draw(canvas);
+        //display walls
+        for (Wall wall: wallList) {
+            wall.draw(canvas);
+        }
 
         //Display UPS
         drawUPS(canvas);
@@ -194,11 +204,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
             Cart cartCheck = cartIterator.next();
             //player has collided with cart (pick it up)
             if (GameObject.areCirclesColliding(cartCheck, cartCheck.getRadius(),
-                    player, player.getRadius())) {
+                                                player, player.getRadius())) {
                 //remove cart if it collides with the player
                 cartIterator.remove();
                 //increase number of carts collected
                 player.incrementCartsCollected();
+            }
+        }
+
+        //Iterate through wallList to check for collisions with the player
+        Iterator<Wall> wallIterator = wallList.iterator();
+        while (wallIterator.hasNext()) {
+            Wall wallCheck = wallIterator.next();
+
+            if(Utils.circleRectangleCollision(player.getPositionX(), player.getPositionY(), player.getRadius(),
+                    wallCheck.getPositionX(), wallCheck.getPositionY(), wallCheck.getWidth(), wallCheck.getHeight())){
+                Log.d("DEBUG", "player colliding with wall!");
             }
         }
 
