@@ -1,4 +1,4 @@
-package com.example.shoppingcartcollector.object;
+package com.example.shoppingcartcollector.gameobject;
 
 import android.content.Context;
 import android.graphics.Canvas;

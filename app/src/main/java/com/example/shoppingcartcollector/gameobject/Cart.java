@@ -1,4 +1,4 @@
-package com.example.shoppingcartcollector.object;
+package com.example.shoppingcartcollector.gameobject;
 
 /*
 The Cart class represents all the shopping carts the player is supposed to collect

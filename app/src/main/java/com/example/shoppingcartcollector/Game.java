@@ -3,17 +3,19 @@ package com.example.shoppingcartcollector;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import androidx.core.content.ContextCompat;
 
-import com.example.shoppingcartcollector.object.Cart;
-import com.example.shoppingcartcollector.object.GameObject;
-import com.example.shoppingcartcollector.object.Player;
-import com.example.shoppingcartcollector.object.Wall;
+import com.example.shoppingcartcollector.gameobject.Cart;
+import com.example.shoppingcartcollector.gameobject.GameObject;
+import com.example.shoppingcartcollector.gameobject.Player;
+import com.example.shoppingcartcollector.gameobject.Wall;
+import com.example.shoppingcartcollector.gamepanel.GameOver;
+import com.example.shoppingcartcollector.gamepanel.Joystick;
+import com.example.shoppingcartcollector.gamepanel.Performance;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,6 +35,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     private List<Cart> cartList = new ArrayList<Cart>();
     private List<Wall> wallList = new ArrayList<Wall>();
     private int joystickPointerId = 0;
+    private GameOver gameOver;
+    private Performance performance;
 
     public Game(Context context) {
         super(context);
@@ -44,17 +48,21 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         //Create GameLoop class
         gameLoop = new GameLoop(this, surfaceHolder);
 
+        //Initialize game over panel
+        gameOver = new GameOver(context);
 
-        //initialize Joystick
+        //initialize Joystick panel
         joystick = new Joystick(275, 700, 70, 40);
 
+        //initialize performance panel (for drawing UPS and FPS)
+        performance = new Performance(context, gameLoop);
+
         //Initialize player
-        player = new Player(getContext(), joystick,1000, 500, 30);
+        player = new Player(context, joystick,1000, 500, 30);
 
         //Initialize walls
-        Wall wall1 = new Wall(getContext(), 300, 300, 500, 100);
+        Wall wall1 = new Wall(context, 300, 300, 500, 100);
         wallList.add(wall1);
-
 
         setFocusable(true);
     }
@@ -133,34 +141,28 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
             wall.draw(canvas);
         }
 
-        //Display UPS
-        drawUPS(canvas);
-        //Display FPS
-        drawFPS(canvas);
+
+
+        //display UPS and FPS
+        performance.draw(canvas);
+
+
+
+        //Draw Game Over if the player is dead
+        if (player.isDead()) {
+            gameOver.draw(canvas);
+        }
     }
 
-    //display updates per second
-    public void drawUPS(Canvas canvas){
-        String averageUPS = Double.toString(gameLoop.getAverageUPS());
-        Paint paint = new Paint();
-        int colour = ContextCompat.getColor(getContext(), R.color.cyan);
-        paint.setColor(colour);
-        paint.setTextSize(50);
-        canvas.drawText("UPS: " + averageUPS, 100, 100, paint);
-    }
-
-    //display frames per second
-    public void drawFPS(Canvas canvas){
-        String averageFPS = Double.toString(gameLoop.getAverageFPS());
-        Paint paint = new Paint();
-        int colour = ContextCompat.getColor(getContext(), R.color.cyan);
-        paint.setColor(colour);
-        paint.setTextSize(50);
-        canvas.drawText("FPS: " + averageFPS, 100, 200, paint);
-    }
 
     //update game state
     public void update() {
+
+        //stop updating the game if the player is dead
+        if (player.isDead()){
+            return;
+        }
+
         player.update();
         joystick.update();
 
@@ -219,7 +221,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
             if(Utils.circleRectangleCollision(player.getPositionX(), player.getPositionY(), player.getRadius(),
                     wallCheck.getPositionX(), wallCheck.getPositionY(), wallCheck.getWidth(), wallCheck.getHeight())){
-                Log.d("DEBUG", "player colliding with wall!");
+               // Log.d("DEBUG", "player colliding with wall!");
+                player.setDead(true);
             }
         }
 

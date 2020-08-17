@@ -1,4 +1,4 @@
-package com.example.shoppingcartcollector.object;
+package com.example.shoppingcartcollector.gameobject;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,7 +8,7 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.example.shoppingcartcollector.GameLoop;
-import com.example.shoppingcartcollector.Joystick;
+import com.example.shoppingcartcollector.gamepanel.Joystick;
 import com.example.shoppingcartcollector.R;
 import com.example.shoppingcartcollector.Utils;
 
@@ -26,12 +26,14 @@ public class Player extends GameObject{
     private final Joystick joystick;
     private double radius;
     private Paint paint;
+    private boolean dead;
 
     public Player(Context context, Joystick joystick, double positionX, double positionY, double radius) {
         super(positionX, positionY);
         this.joystick = joystick;
         this.radius = radius;
         this.cartsCollected = 0;
+        this.dead = false;
 
         //set up player colour
         paint = new Paint();
@@ -66,5 +68,8 @@ public class Player extends GameObject{
             double distance = Utils.getDistanceBetweenPoints(0, 0, velocityX, velocityY);
         }
     }
+
+    public boolean isDead() { return dead; }
+    public void setDead (boolean dead) { this.dead = dead; }
 
 }

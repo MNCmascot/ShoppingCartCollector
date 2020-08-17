@@ -1,4 +1,4 @@
-package com.example.shoppingcartcollector.object;
+package com.example.shoppingcartcollector.gameobject;
 
 /*
 GameObject abstract class for other basic objects to inherit from:

@@ -1,9 +1,11 @@
-package com.example.shoppingcartcollector;
+package com.example.shoppingcartcollector.gamepanel;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
+
+import com.example.shoppingcartcollector.Utils;
 
 public class Joystick {
 
