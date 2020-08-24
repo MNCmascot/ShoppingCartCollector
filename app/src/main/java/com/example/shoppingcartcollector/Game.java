@@ -3,6 +3,7 @@ package com.example.shoppingcartcollector;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -106,18 +107,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        gameLoop.startLoop();
+        Log.d("Game.java", "surfaceCreated()");
 
+        if (gameLoop.getState().equals(Thread.State.TERMINATED)) {
+            gameLoop = new GameLoop(this, holder);
+        }
+        gameLoop.startLoop();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+        Log.d("MainActivity.java", "surfaceChanged()");
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        Log.d("MainActivity.java", "surfaceDestroyed()");
     }
 
     /*
@@ -226,5 +231,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
             }
         }
 
+    }
+
+    //Pause the game when user exits
+    public void pause() {
+        gameLoop.stopLoop();
     }
 }
