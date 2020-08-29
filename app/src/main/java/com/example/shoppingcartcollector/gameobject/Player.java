@@ -52,8 +52,6 @@ public class Player extends GameObject{
         canvas.drawCircle((float)positionX, (float)positionY, (float)radius, paint);
     }
 
-    public double getRadius() { return radius; }
-
     public void update() {
         //update velocity based on actuator of Joystick
         velocityX = joystick.getActuatorX()*MAX_SPEED;
@@ -69,6 +67,9 @@ public class Player extends GameObject{
         }
     }
 
+    public double getRadius() { return radius; }
+    public int getCartsCollected() { return cartsCollected; }
+    public void setCartsCollected(int newCartsCollected) {cartsCollected = newCartsCollected; }
     public boolean isDead() { return dead; }
     public void setDead (boolean dead) { this.dead = dead; }
 

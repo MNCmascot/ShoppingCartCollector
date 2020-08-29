@@ -32,7 +32,7 @@ public class Performance {
         int colour = ContextCompat.getColor(context, R.color.cyan);
         paint.setColor(colour);
         paint.setTextSize(50);
-        canvas.drawText("UPS: " + averageUPS, 100, 100, paint);
+        canvas.drawText("UPS: " + averageUPS, 50, 100, paint);
     }
 
     //display frames per second
@@ -42,6 +42,6 @@ public class Performance {
         int colour = ContextCompat.getColor(context, R.color.cyan);
         paint.setColor(colour);
         paint.setTextSize(50);
-        canvas.drawText("FPS: " + averageFPS, 100, 200, paint);
+        canvas.drawText("FPS: " + averageFPS, 50, 200, paint);
     }
 }
