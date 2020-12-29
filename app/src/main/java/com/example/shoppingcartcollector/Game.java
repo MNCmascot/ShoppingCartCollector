@@ -26,7 +26,6 @@ import java.util.List;
 /*
 The Game class manages all objects in the game, as well as updating states and rendering objects to the screen
 
-
  */
 
 
