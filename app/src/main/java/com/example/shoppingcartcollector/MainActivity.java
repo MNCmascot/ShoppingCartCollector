@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.Animator;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
+    Button playGame;
 
     private Game game;
 
@@ -16,20 +19,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("MainActivity.java", "onCreate()");
         super.onCreate(savedInstanceState);
+        //Set content view to main menu
+        setContentView(R.layout.mainmenu);
 
-
+        //Associate button with play button
+        playGame = findViewById(R.id.play_button);
 
         //Set window to fullscreen
         Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        //setContentView(R.layout.activity_main);
+        //Open game when pushing button
+        playGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGame();
+            }
+        });
 
+        //setContentView(R.layout.activity_main);
+    }
+
+    public void openGame(){
         //Set content view to new game class (for rendering objects)
         game = new Game(this);
         setContentView(game);
-
     }
+
 
     @Override
     protected void onStart() {
@@ -68,7 +84,22 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         Log.d("MainActivity.java", "onBackPressed()");
 
-        //TODO: return to title page on back press
+        //return to title page on back press
+        game.pause();
+        super.onPause();
+        setContentView(R.layout.mainmenu);
+
+        //Associate button with play button
+        playGame = findViewById(R.id.play_button);
+        //Open game when pushing button
+        playGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGame();
+            }
+        });
+
+
         //don't do anything on back button
         //super.onBackPressed();
     }
