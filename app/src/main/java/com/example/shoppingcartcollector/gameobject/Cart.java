@@ -18,18 +18,22 @@ import com.example.shoppingcartcollector.R;
 
 public class Cart extends GameObject{
 
-    private static final double SPAWNS_PER_MINUTE = 20;
-    private static final double SPAWNS_PER_SECOND = SPAWNS_PER_MINUTE/60.0;
-    private static final double UPDATES_PER_SPAWN = GameLoop.MAX_UPS/SPAWNS_PER_SECOND;
-    private static double updatesUntilNextSpawn = UPDATES_PER_SPAWN;
+    private static double SPAWNS_PER_MINUTE, SPAWNS_PER_SECOND, UPDATES_PER_SPAWN;
+    private static double updatesUntilNextSpawn;
     private final Player player;
     private double radius;
     private Paint paint;
 
-    public Cart(Context context, Player player, double positionX, double positionY, double radius) {
+    public Cart(Context context, Player player, double positionX, double positionY, double radius, int spawnsPerMin) {
         super(positionX, positionY);
         this.player = player;
         this.radius = radius;
+
+        //Take in spawnsPerMin from game, which increases as the player plays longer
+        SPAWNS_PER_MINUTE = spawnsPerMin;
+        SPAWNS_PER_SECOND = SPAWNS_PER_MINUTE/60.0;
+        UPDATES_PER_SPAWN = GameLoop.MAX_UPS/SPAWNS_PER_SECOND;
+        updatesUntilNextSpawn = UPDATES_PER_SPAWN;
 
         //set up Cart colour
         paint = new Paint();

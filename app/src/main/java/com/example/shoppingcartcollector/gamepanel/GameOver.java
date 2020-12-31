@@ -27,7 +27,12 @@ public class GameOver {
         Paint paint = new Paint();
         int colour = ContextCompat.getColor(context, R.color.gameOver);
         paint.setColor(colour);
+        //set text size for "Game Over"
         paint.setTextSize(150);
         canvas.drawText(text, x, y, paint);
+        //set up text for restart text below game over
+        text = "Press the back button to restart.";
+        paint.setTextSize(50);
+        canvas.drawText(text, x, y+60, paint);
     }
 }

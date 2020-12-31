@@ -198,7 +198,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
                 double tempY = Math.random() * 750 + 300; //random Y location
                 underWall = false; //Initialize as false, not under a wall
 
-                cartList.add(new Cart(getContext(), player, tempX, tempY, 20));
+                //Make game slowly get more difficult the longer the player has been playing, currently every 10 seconds
+                int difficulty = (performance.getSeconds()/10);
+                cartList.add(new Cart(getContext(), player, tempX, tempY, 20, 20+difficulty*10));
                 tempCart = cartList.get(cartList.size() - 1); //last cart added
 
                 //distance between new cart and joystick
@@ -259,6 +261,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
                     wallCheck.getPositionX(), wallCheck.getPositionY(), wallCheck.getWidth(), wallCheck.getHeight())){
                // Log.d("DEBUG", "player colliding with wall!");
                 player.setDead(true);
+                //tell performance to stop updating timer
+                performance.setGameOver();
             }
         }
 
