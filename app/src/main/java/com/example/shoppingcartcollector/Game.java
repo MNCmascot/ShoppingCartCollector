@@ -15,6 +15,7 @@ import com.example.shoppingcartcollector.gameobject.CartZone;
 import com.example.shoppingcartcollector.gameobject.GameObject;
 import com.example.shoppingcartcollector.gameobject.Player;
 import com.example.shoppingcartcollector.gameobject.Wall;
+import com.example.shoppingcartcollector.gameobject.Car;
 import com.example.shoppingcartcollector.gamepanel.GameOver;
 import com.example.shoppingcartcollector.gamepanel.Joystick;
 import com.example.shoppingcartcollector.gamepanel.Performance;
@@ -35,10 +36,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     private GameLoop gameLoop;
     private List<Cart> cartList = new ArrayList<Cart>();
     private List<Wall> wallList = new ArrayList<Wall>();
+    private List<Car> carList = new ArrayList<Car>();
     private CartZone cartZone;
     private int joystickPointerId = 0;
     private GameOver gameOver;
     private Performance performance;
+    //spawn time used for spawning cars
+    private long spawnTime;
 
     public Game(Context context) {
         super(context);
@@ -63,7 +67,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         player = new Player(context, joystick,1000, 500, 30);
 
         //Initialize walls
-        Wall wall1 = new Wall(context, 300, 300, 500, 100);
+        Wall wall1 = new Wall(context, 300, 500, 500, 100);
         wallList.add(wall1);
 
         //Initialize Cart Zone (to bring the carts to)
@@ -148,6 +152,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         //display walls
         for (Wall wall: wallList) {
             wall.draw(canvas);
+        }
+        //display cars
+        for (Car car: carList) {
+            car.draw(canvas);
         }
         //display CartZone
         cartZone.draw(canvas);
@@ -238,6 +246,20 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
             wall.update();
         }
 
+        //spawn a new car if it's ready, starting off screen
+        if (carReadyToSpawn()) {
+            carList.add(new Car(getContext(), -200, 300, 200, 100));
+        }
+
+        //update each Car
+        for (Car car : carList) {
+            car.update();
+            //remove car if it's too far to the right
+            if (car.getPositionX() > 2200){
+                carList.remove(car);
+            }
+        }
+
         //iterate through cartList to check for collisions with the player
         Iterator<Cart> cartIterator = cartList.iterator();
         while (cartIterator.hasNext()) {
@@ -266,6 +288,19 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
             }
         }
 
+        //Iterate through carList to check for collisions with the player
+        Iterator<Car> carIterator = carList.iterator();
+        while (carIterator.hasNext()) {
+            Car carCheck = carIterator.next();
+
+            if(Utils.circleRectangleCollision(player.getPositionX(), player.getPositionY(), player.getRadius(),
+                    carCheck.getPositionX(), carCheck.getPositionY(), carCheck.getWidth(), carCheck.getHeight())){
+                player.setDead(true);
+                //tell performance to stop updating timer
+                performance.setGameOver();
+            }
+        }
+
         //Check if player has carts and "collided" with the Cart Zone and increase number of carts left if so.
         if( player.getCartsCollected() >= 0 &&
             Utils.circleRectangleCollision(player.getPositionX(), player.getPositionY(), player.getRadius(),
@@ -281,5 +316,25 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     //Pause the game when user exits
     public void pause() {
         gameLoop.stopLoop();
+    }
+
+    public boolean carReadyToSpawn(){
+
+        long millis;
+        int seconds;
+        //Time since last spawn
+        millis = System.currentTimeMillis() - spawnTime;
+        //time in seconds
+        seconds = (int) (millis/1000);
+
+        //spawn another car if it has been longer than threshold
+        if (seconds > 10) {
+            //reset spawn timer
+            spawnTime = System.currentTimeMillis();
+            return true;
+        }
+
+        //otherwise, not ready to spawn
+        return false;
     }
 }

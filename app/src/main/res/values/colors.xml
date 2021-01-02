@@ -7,6 +7,7 @@
     <color name="player">#FFFFFF</color>
     <color name="cart">#626266</color>
     <color name="wall">#8c5146</color>
+    <color name="car">#c2594c</color>
     <color name="cartzone">#1113A1</color>
     <color name="cartsleft">#3CD392</color>
     <color name="gameOver">#C01313</color>

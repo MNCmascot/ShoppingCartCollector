@@ -2,7 +2,7 @@ package com.example.shoppingcartcollector.gameobject;
 
 /*
 GameObject abstract class for other basic objects to inherit from:
-carts / player
+cars / carts / player
  */
 
 import android.graphics.Canvas;
