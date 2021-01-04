@@ -25,4 +25,18 @@ public class Utils {
         double distanceSquared = Math.pow(distanceX, 2) + Math.pow(distanceY, 2);
         return distanceSquared < (Math.pow(radius, 2));
     }
+
+    public static boolean RectangleRectangleCollision(double rect1x, double rect1y, double rect1width, double rect1height,
+                                                      double rect2x, double rect2y, double rect2width, double rect2height){
+        //Check both x and y plus their respective width and height
+        if (rect2x + rect2width > rect1x &&
+                rect2y + rect2height > rect1y &&
+                rect1x + rect1width > rect2x &&
+                rect1y + rect1height > rect2y) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }

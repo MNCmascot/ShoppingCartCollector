@@ -21,13 +21,14 @@ public class Cart extends GameObject{
     private static double SPAWNS_PER_MINUTE, SPAWNS_PER_SECOND, UPDATES_PER_SPAWN;
     private static double updatesUntilNextSpawn;
     private final Player player;
-    private double radius;
+    private int width = 0, height = 0;
     private Paint paint;
 
-    public Cart(Context context, Player player, double positionX, double positionY, double radius, int spawnsPerMin) {
+    public Cart(Context context, Player player, double positionX, double positionY, int width, int height, int spawnsPerMin) {
         super(positionX, positionY);
         this.player = player;
-        this.radius = radius;
+        this.width = width;
+        this.height = height;
 
         //Take in spawnsPerMin from game, which increases as the player plays longer
         SPAWNS_PER_MINUTE = spawnsPerMin;
@@ -58,10 +59,12 @@ public class Cart extends GameObject{
     //TODO: Change this from a circle to a shopping cart
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawCircle((float)positionX, (float)positionY, (float)radius, paint);
+        canvas.drawRect((float)positionX, (float)positionY,
+                (float)(positionX+width), (float)(positionY + height), paint);
     }
 
-    public double getRadius() { return radius; }
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
 
     @Override
     public void update() {

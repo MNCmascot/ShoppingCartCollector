@@ -197,43 +197,59 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
                 player.setDead(true);
             }
 
-            Cart tempCart;
+            Cart tempCart; //the cart we are trying to spawn
             double distance; //distance between joystick and new cart
             double distanceToCollision; //distance between radii
-            boolean underWall; //temporary boolean if under a wall
+            boolean underCart, underJoystick, underWall; //temporary booleans if under something
             do { //get another position if new cart is under joystick or under wall
                 double tempX = Math.random() * 2000 + 50; //random X location
                 double tempY = Math.random() * 750 + 300; //random Y location
                 underWall = false; //Initialize as false, not under a wall
+                underJoystick = false; //Initialize as false, not under joystick
+                underCart = false;  //Initialize as false, not under a cart
 
                 //Make game slowly get more difficult the longer the player has been playing, currently every 10 seconds
                 int difficulty = (performance.getSeconds()/10);
-                cartList.add(new Cart(getContext(), player, tempX, tempY, 20, 20+difficulty*10));
+                cartList.add(new Cart(getContext(), player, tempX, tempY, 60, 40, 20+difficulty*10));
                 tempCart = cartList.get(cartList.size() - 1); //last cart added
 
-                //distance between new cart and joystick
-                distance = Utils.getDistanceBetweenPoints(tempCart.getPositionX(), tempCart.getPositionY(),
-                        joystick.getOuterCircleCenterPositionX(), joystick.getOuterCircleCenterPositionY());
-                //distance between radii
-                distanceToCollision = tempCart.getRadius() + joystick.getOuterCircleRadius();
+
+                //Check if under joystick
+                underJoystick = Utils.circleRectangleCollision(joystick.getOuterCircleCenterPositionX(), joystick.getOuterCircleCenterPositionY(), joystick.getOuterCircleRadius(),
+                                                               tempCart.getPositionX(), tempCart.getPositionY(), tempCart.getWidth(), tempCart.getHeight());
+
+                //Iterate through cartList to check if cart is under and of the other carts
+                Iterator<Cart> cartIterator = cartList.iterator();
+                while (cartIterator.hasNext()) {
+                    Cart cartCheck = cartIterator.next();
+                    //don't check if this is the last cart in the list (itself)
+                    if (cartIterator.hasNext() == false){
+                        break;
+                    }
+                    if (Utils.RectangleRectangleCollision(tempCart.getPositionX(), tempCart.getPositionY(), tempCart.getWidth(), tempCart.getHeight(),
+                            cartCheck.getPositionX(), cartCheck.getPositionY(), cartCheck.getWidth(), cartCheck.getHeight())){
+                        underCart = true;
+                        break;
+                    }
+                }
 
                 //Iterate through wallList to check if cart is under any of the walls
                 Iterator<Wall> wallIterator = wallList.iterator();
                 while (wallIterator.hasNext()) {
                     Wall wallCheck = wallIterator.next();
-                    if (Utils.circleRectangleCollision(tempCart.getPositionX(), tempCart.getPositionY(), tempCart.getRadius(),
+                    if (Utils.RectangleRectangleCollision(tempCart.getPositionX(), tempCart.getPositionY(), tempCart.getWidth(), tempCart.getHeight(),
                             wallCheck.getPositionX(), wallCheck.getPositionY(), wallCheck.getWidth(), wallCheck.getHeight())){
                         underWall = true;
                         break;
                     }
                 }
 
-                if (distance < distanceToCollision || underWall) { //under joystick or under wall, remove cart
+                if (underCart || underJoystick|| underWall) { //under joystick or under wall, remove cart
                     cartList.remove(cartList.size()-1);
-                    //Log.d("DEBUG", "Cart under joystick");
+                    Log.d("DEBUG", "cart spawned under something");
                 }
 
-            } while ((distance < distanceToCollision) || underWall);
+            } while (underCart || underJoystick || underWall);
         }
 
         //update each Cart
@@ -265,8 +281,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         while (cartIterator.hasNext()) {
             Cart cartCheck = cartIterator.next();
             //player has collided with cart (pick it up)
-            if (GameObject.areCirclesColliding(cartCheck, cartCheck.getRadius(),
-                                                player, player.getRadius())) {
+            if (Utils.circleRectangleCollision(player.getPositionX(), player.getPositionY(), player.getRadius(),
+                    cartCheck.getPositionX(), cartCheck.getPositionY(), cartCheck.getWidth(), cartCheck.getHeight())){
                 //remove cart if it collides with the player
                 cartIterator.remove();
                 //increase number of carts collected
