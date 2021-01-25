@@ -1,10 +1,14 @@
 package com.example.shoppingcartcollector.gamepanel;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
+import com.example.shoppingcartcollector.R;
 import com.example.shoppingcartcollector.Utils;
 
 public class Joystick {
@@ -22,7 +26,7 @@ public class Joystick {
     private double actuatorX;
     private double actuatorY;
 
-    public Joystick(int centerPositionX, int centerPositionY, int outerCircleRadius, int innerCircleRadius) {
+    public Joystick(Context context, int centerPositionX, int centerPositionY, int outerCircleRadius, int innerCircleRadius) {
         //outer and inner circle make up the joystick (inner circle shows movement)
         outerCircleCenterPositionX = centerPositionX;
         outerCircleCenterPositionY = centerPositionY;
@@ -35,11 +39,11 @@ public class Joystick {
 
         //paint of circles
         outerCirclePaint = new Paint();
-        outerCirclePaint.setColor(Color.GRAY);
+        outerCirclePaint.setColor(ContextCompat.getColor(context, R.color.joystick));
         outerCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         innerCirclePaint = new Paint();
-        innerCirclePaint.setColor(Color.YELLOW);
+        innerCirclePaint.setColor(ContextCompat.getColor(context, R.color.joystickBackground));
         innerCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
 

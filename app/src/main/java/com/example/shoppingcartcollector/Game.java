@@ -58,7 +58,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         gameOver = new GameOver(context);
 
         //initialize Joystick panel
-        joystick = new Joystick(275, 700, 70, 40);
+        joystick = new Joystick(context, 275, 700, 70, 40);
 
         //initialize performance panel (for drawing UPS and FPS)
         performance = new Performance(context, gameLoop);

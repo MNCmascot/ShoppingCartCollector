@@ -2,6 +2,8 @@
 <resources>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
+    <color name="joystick">#FFAD75</color>
+    <color name="joystickBackground">#F3D2B7</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="cyan">#32E6E6</color>
     <color name="player">#FFFFFF</color>

@@ -12,6 +12,9 @@ import com.example.shoppingcartcollector.gamepanel.Joystick;
 import com.example.shoppingcartcollector.R;
 import com.example.shoppingcartcollector.Utils;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 /*
    Main character of the game, controlled by the joystick.
    extension of GameObject
@@ -31,8 +34,10 @@ public class Player extends GameObject{
     //data for drawing trailing carts
     private float cartWidth;
     private float cartHeight;
-    private double movementAngle;
+    private double joystickMovementAngle;
     private Paint cartPaint;
+
+    private double moveAngle;
 
     public Player(Context context, Joystick joystick, double positionX, double positionY, double radius) {
         super(positionX, positionY);
@@ -44,7 +49,10 @@ public class Player extends GameObject{
         //set up extra info for drawing trailing carts
         this.cartWidth = 60; //manually set
         this.cartHeight = 40; //manually set
-        this.movementAngle = 0; //initialize as 0
+        this.joystickMovementAngle = 0; //initialize as 0
+
+        //used for player movement (different when carts are collected)
+        this.moveAngle = 0; // initialize to 0
 
         //set up player colour
         paint = new Paint();
@@ -62,6 +70,7 @@ public class Player extends GameObject{
         cartsCollected += 1;
         Log.d("DEBUG", "Carts Collected: " + cartsCollected);
 
+
     }
 
     public void draw(Canvas canvas) {
@@ -71,8 +80,9 @@ public class Player extends GameObject{
         //draw trailing carts
         canvas.save(); //save canvas state before rotating
 
-        //rotate canvas in movement direction (to draw carts trailing behind
-        canvas.rotate((float)movementAngle, (float)positionX, (float)positionY);
+        //rotate canvas in movement direction (to draw carts trailing behind)
+        canvas.rotate((float) moveAngle, (float) positionX, (float) positionY);
+
         for (int i = 1; i <= cartsCollected; i++) {
             canvas.drawRect((float) (positionX - 60*i - radius), (float) (positionY - 20),
                     (float) (positionX - 60*(i-1) - radius), (float) (positionY + 20), cartPaint);
@@ -81,17 +91,46 @@ public class Player extends GameObject{
     }
 
     public void update() {
-        //update velocity based on actuator of Joystick
-        velocityX = joystick.getActuatorX()*MAX_SPEED;
-        velocityY = joystick.getActuatorY()*MAX_SPEED;
+
+        //old movement
+        //velocityX = joystick.getActuatorX()*MAX_SPEED;
+        //velocityY = joystick.getActuatorY()*MAX_SPEED;
 
         //get direction that player is moving in and turn to degrees
         double tempAngle = Math.toDegrees(Math.atan2(joystick.getActuatorY(), joystick.getActuatorX()));
         //only update if player is moving so it doesn't snap back behind them
         if (tempAngle != 0) {
-            movementAngle = Math.toDegrees(Math.atan2(joystick.getActuatorY(), joystick.getActuatorX()));
+            joystickMovementAngle = tempAngle;
         }
-        //update position
+
+        if (cartsCollected == 0) { //change position normally if no carts collected
+            //update velocity based on actuator of Joystick
+            moveAngle = joystickMovementAngle;
+            velocityX = cos(Math.toRadians(moveAngle))*MAX_SPEED;
+            velocityY = sin(Math.toRadians(moveAngle))*MAX_SPEED;
+
+        } else if (tempAngle != 0 && //not stationary
+                joystickMovementAngle > -90 && joystickMovementAngle < 90){ //moving RIGHT
+            if (cartsCollected >= 20){ //max turn reduction for 20 carts
+                moveAngle += 1;
+            } else { //the more carts you have, the slower you turn
+                moveAngle += (3 - 0.1 * cartsCollected);
+            }
+        } else if (tempAngle != 0) {//moving LEFT when joystick angle < -90 or > 90
+            if (cartsCollected >= 20){ //max turn reduction for 20 carts
+                moveAngle -= 1;
+            } else { //the more carts you have, the slower you turn
+                moveAngle -= (3 - 0.1 * cartsCollected);
+            }
+        }
+
+        if (tempAngle != 0) { //update velocity if
+            velocityX = cos(Math.toRadians(moveAngle)) * MAX_SPEED;
+            velocityY = sin(Math.toRadians(moveAngle)) * MAX_SPEED;
+        } else { //player not moving
+            velocityX = 0;
+            velocityY = 0;
+        }
         positionX += velocityX;
         positionY += velocityY;
 
