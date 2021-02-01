@@ -3,9 +3,12 @@ package com.example.shoppingcartcollector.gameobject;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.shoppingcartcollector.GameLoop;
 import com.example.shoppingcartcollector.gamepanel.Joystick;
@@ -18,6 +21,8 @@ import static java.lang.Math.sin;
 /*
    Main character of the game, controlled by the joystick.
    extension of GameObject
+
+   player image: https://kenney.nl/assets/topdown-shooter
  */
 
 public class Player extends GameObject{
@@ -30,12 +35,14 @@ public class Player extends GameObject{
     private double radius;
     private Paint paint;
     private boolean dead;
+    private Drawable playerImage;
 
     //data for drawing trailing carts
     private float cartWidth;
     private float cartHeight;
     private double joystickMovementAngle;
-    private Paint cartPaint;
+    //private Paint cartPaint;
+    private Drawable cartImage;
 
     private double moveAngle;
 
@@ -46,10 +53,16 @@ public class Player extends GameObject{
         this.cartsCollected = 0;
         this.dead = false;
 
+        //set image
+        this.playerImage = ResourcesCompat.getDrawable(context.getResources(), R.drawable.player, null);
+
+
         //set up extra info for drawing trailing carts
         this.cartWidth = 60; //manually set
         this.cartHeight = 40; //manually set
         this.joystickMovementAngle = 0; //initialize as 0
+        //set cart image
+        this.cartImage = ResourcesCompat.getDrawable(context.getResources(), R.drawable.cart, null);
 
         //used for player movement (different when carts are collected)
         this.moveAngle = 0; // initialize to 0
@@ -60,9 +73,9 @@ public class Player extends GameObject{
         paint.setColor(colour);
 
         //set up Cart colour
-        cartPaint = new Paint();
-        int colour2 = ContextCompat.getColor(context, R.color.cart);
-        cartPaint.setColor(colour2);
+       // cartPaint = new Paint();
+       // int colour2 = ContextCompat.getColor(context, R.color.cart);
+       // cartPaint.setColor(colour2);
 
     }
 
@@ -74,8 +87,9 @@ public class Player extends GameObject{
     }
 
     public void draw(Canvas canvas) {
+
         //draw player
-        canvas.drawCircle((float)positionX, (float)positionY, (float)radius, paint);
+       // canvas.drawCircle((float)positionX, (float)positionY, (float)radius, paint);
 
         //draw trailing carts
         canvas.save(); //save canvas state before rotating
@@ -83,9 +97,26 @@ public class Player extends GameObject{
         //rotate canvas in movement direction (to draw carts trailing behind)
         canvas.rotate((float) moveAngle, (float) positionX, (float) positionY);
 
+
+        Rect playerBounds = canvas.getClipBounds();
+        playerBounds.left = (int)(positionX-radius);
+        playerBounds.top = (int)(positionY-radius);
+        playerBounds.right = (int)(positionX+radius);
+        playerBounds.bottom = (int)(positionY+radius);
+        playerImage.setBounds(playerBounds);
+        playerImage.draw(canvas);
+
         for (int i = 1; i <= cartsCollected; i++) {
-            canvas.drawRect((float) (positionX - 60*i - radius), (float) (positionY - 20),
-                    (float) (positionX - 60*(i-1) - radius), (float) (positionY + 20), cartPaint);
+            Rect imageBounds = canvas.getClipBounds();
+            imageBounds.left = (int)(positionX + 60*(i-1) + radius);
+            imageBounds.top = (int)(positionY - 20);
+            imageBounds.right = (int)(positionX + 60*i+ radius);
+            imageBounds.bottom = (int)(float) (positionY + 20);
+            cartImage.setBounds(imageBounds);
+            cartImage.draw(canvas);
+
+            //canvas.drawRect((float) (positionX - 60*i - radius), (float) (positionY - 20),
+             //       (float) (positionX - 60*(i-1) - radius), (float) (positionY + 20), cartPaint);
         }
         canvas.restore(); //restore rotation
     }

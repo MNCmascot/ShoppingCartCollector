@@ -195,6 +195,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
             //If no carts left, game over
             if (cartZone.getCartsLeft() <= 0) {
                 player.setDead(true);
+                performance.setGameOver();
             }
 
             Cart tempCart; //the cart we are trying to spawn

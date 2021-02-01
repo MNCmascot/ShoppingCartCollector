@@ -5,13 +5,20 @@ The Cart class represents all the shopping carts the player is supposed to colle
 and bring back to the store.
 They spawn randomly in the parking lot over time.
 Extension of GameObject
+
+Image from here: https://opengameart.org/content/low-poly-shopping-cart
  */
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.shoppingcartcollector.GameLoop;
 import com.example.shoppingcartcollector.R;
@@ -22,13 +29,17 @@ public class Cart extends GameObject{
     private static double updatesUntilNextSpawn;
     private final Player player;
     private int width = 0, height = 0;
-    private Paint paint;
+   // private Paint paint;
+    private Drawable myImage;
 
     public Cart(Context context, Player player, double positionX, double positionY, int width, int height, int spawnsPerMin) {
         super(positionX, positionY);
         this.player = player;
         this.width = width;
         this.height = height;
+
+        //set image
+        this.myImage = ResourcesCompat.getDrawable(context.getResources(), R.drawable.cart, null);
 
         //Take in spawnsPerMin from game, which increases as the player plays longer
         SPAWNS_PER_MINUTE = spawnsPerMin;
@@ -37,9 +48,9 @@ public class Cart extends GameObject{
         updatesUntilNextSpawn = UPDATES_PER_SPAWN;
 
         //set up Cart colour
-        paint = new Paint();
-        int colour = ContextCompat.getColor(context, R.color.cart);
-        paint.setColor(colour);
+        //paint = new Paint();
+       // int colour = ContextCompat.getColor(context, R.color.cart);
+       // paint.setColor(colour);
 
     }
 
@@ -59,8 +70,16 @@ public class Cart extends GameObject{
     //TODO: Change this from a circle to a shopping cart
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawRect((float)positionX, (float)positionY,
-                (float)(positionX+width), (float)(positionY + height), paint);
+        Rect imageBounds = canvas.getClipBounds();
+        imageBounds.left = (int)positionX;
+        imageBounds.top = (int)positionY;
+        imageBounds.right = (int)(positionX+width);
+        imageBounds.bottom = (int)(positionY + height);
+        myImage.setBounds(imageBounds);
+        myImage.draw(canvas);
+
+        //canvas.drawRect((float)positionX, (float)positionY,
+               // (float)(positionX+width), (float)(positionY + height), paint);
     }
 
     public int getWidth() { return width; }
