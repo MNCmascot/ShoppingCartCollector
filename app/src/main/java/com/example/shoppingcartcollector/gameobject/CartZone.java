@@ -40,8 +40,8 @@ public class CartZone extends GameObject {
         //Draw how many carts are left in the store
         canvas.drawText("Carts left in store: " + cartsLeft, 300, 100, cartsTextPaint);
         //Draw the cartZone
-        canvas.drawRect((float)positionX, (float)positionY,
-                (float)(positionX+width), (float)(positionY + height), paint);
+        //canvas.drawRect((float)positionX, (float)positionY,
+        //        (float)(positionX+width), (float)(positionY + height), paint);
     }
 
     @Override

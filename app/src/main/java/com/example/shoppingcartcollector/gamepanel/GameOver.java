@@ -20,15 +20,15 @@ public class GameOver {
     }
     public void draw(Canvas canvas) {
         String text = "Game Over";
-        float x = 1000;
-        float y = 225;
+        float x = 1178;
+        float y = 230;
 
         //set up game over colour
         Paint paint = new Paint();
         int colour = ContextCompat.getColor(context, R.color.gameOver);
         paint.setColor(colour);
         //set text size for "Game Over"
-        paint.setTextSize(150);
+        paint.setTextSize(100);
         canvas.drawText(text, x, y, paint);
         //set up text for restart text below game over
         text = "Press the back button to restart.";

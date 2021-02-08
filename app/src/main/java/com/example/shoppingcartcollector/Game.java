@@ -3,13 +3,19 @@ package com.example.shoppingcartcollector;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.core.content.ContextCompat;
 
+import com.example.shoppingcartcollector.gameobject.Background;
 import com.example.shoppingcartcollector.gameobject.Cart;
 import com.example.shoppingcartcollector.gameobject.CartZone;
 import com.example.shoppingcartcollector.gameobject.GameObject;
@@ -34,6 +40,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     private final Player player;
     private final Joystick joystick;
     private GameLoop gameLoop;
+    private Background background;
     private List<Cart> cartList = new ArrayList<Cart>();
     private List<Wall> wallList = new ArrayList<Wall>();
     private List<Car> carList = new ArrayList<Car>();
@@ -43,6 +50,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     private Performance performance;
     //spawn time used for spawning cars
     private long spawnTime;
+
+    private boolean drawBackground = false;
 
     public Game(Context context) {
         super(context);
@@ -57,21 +66,67 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         //Initialize game over panel
         gameOver = new GameOver(context);
 
+        ImageView backgroundPanel = new ImageView(context);
+        backgroundPanel.setBackgroundResource(R.drawable.background);
+
+
+
         //initialize Joystick panel
         joystick = new Joystick(context, 275, 700, 70, 40);
 
         //initialize performance panel (for drawing UPS and FPS)
         performance = new Performance(context, gameLoop);
 
+        //initialize background
+        background = new Background(context, 0, 0, 2132, 1080);
+
         //Initialize player
         player = new Player(context, joystick,1000, 500, 30);
 
         //Initialize walls
-        Wall wall1 = new Wall(context, 300, 500, 500, 100);
+        //Centre wall left
+        Wall wall1 = new Wall(context, 637, 396, 243, 100);
         wallList.add(wall1);
+        //Centre wall right
+        Wall wall2 = new Wall(context, 1623, 404, 243, 100);
+        wallList.add(wall2);
+        //Store (counted as a wall)
+        Wall wall3 = new Wall(context, 845, 100, 335, 180);
+        wallList.add(wall3);
+        //top
+        Wall wall4 = new Wall(context, 0, 0, 2132, 34);
+        wallList.add(wall4);
+        //top left side
+        Wall wall5 = new Wall(context, 0, 34, 27, 255);
+        wallList.add(wall5);
+        //top right side
+        Wall wall6 = new Wall(context, 2109, 34, 27, 255);
+        wallList.add(wall6);
+        //bottom left side
+        Wall wall7 = new Wall(context, 0, 406, 27, 674);
+        wallList.add(wall7);
+        //bottom left corner piece
+        Wall wall8 = new Wall(context, 27, 982, 408, 74);
+        wallList.add(wall8);
+        //bottom
+        Wall wall9 = new Wall(context, 27, 1056, 2105, 24);
+        wallList.add(wall9);
+        //bottom right side
+        Wall wall10 = new Wall(context, 2107, 408, 29, 672);
+        wallList.add(wall10);
+        //bottom centre piece
+        Wall wall11 = new Wall(context, 1131, 986, 260, 70);
+        wallList.add(wall11);
+        //left car entrance
+        Wall wall12 = new Wall(context, -1, 290, 1, 116);
+        wallList.add(wall12);
+        //right car entrance
+        Wall wall13 = new Wall(context, 2133, 290, 1, 118);
+        wallList.add(wall13);
+
 
         //Initialize Cart Zone (to bring the carts to)
-        cartZone = new CartZone(context, 1000, 100, 1000, 150, 50);
+        cartZone = new CartZone(context, 1178, 156, 695, 97, 30);
 
         setFocusable(true);
     }
@@ -133,6 +188,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         Log.d("MainActivity.java", "surfaceDestroyed()");
     }
 
+
     /*
     Draw to canvas (displayed in the order from bottom to top. ex: player should not be displayed
     over the joystick)
@@ -140,6 +196,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+       // canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+
+       // if (!drawBackground){
+            background.draw(canvas);
+            //drawBackground=true;
+        //}
 
         //display joystick
         joystick.draw(canvas);
@@ -149,15 +211,20 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         }
         //display player
         player.draw(canvas);
+
         //display walls
+        /*
         for (Wall wall: wallList) {
             wall.draw(canvas);
         }
+         */
+
+
         //display cars
         for (Car car: carList) {
             car.draw(canvas);
         }
-        //display CartZone
+        //display CartZone (currently just draws carts left in store, background handles the rest)
         cartZone.draw(canvas);
 
         //display UPS and FPS

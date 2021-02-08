@@ -16,6 +16,8 @@ public class GameLoop extends Thread{
     private double averageUPS;
     private double averageFPS;
 
+    private boolean displayingBackground = false;
+
     public GameLoop(Game game, SurfaceHolder surfaceHolder) {
         this.game = game;
         this.surfaceHolder = surfaceHolder;
