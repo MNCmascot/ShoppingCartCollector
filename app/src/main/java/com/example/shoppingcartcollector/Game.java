@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -47,6 +48,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     private CartZone cartZone;
     private int joystickPointerId = 0;
     private GameOver gameOver;
+    private boolean playedGameOverSound;
     private Performance performance;
     //spawn time used for spawning cars
     private long spawnTime;
@@ -65,6 +67,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
         //Initialize game over panel
         gameOver = new GameOver(context);
+
+        //used to play gameOver crash only once
+        playedGameOverSound = false;
 
         ImageView backgroundPanel = new ImageView(context);
         backgroundPanel.setBackgroundResource(R.drawable.background);
@@ -235,6 +240,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         //Draw Game Over if the player is dead
         if (player.isDead()) {
             gameOver.draw(canvas);
+
+            //play crash sound if player died to a crash
+            if (cartZone.getCartsLeft() > 0 && playedGameOverSound == false){
+                //Play crash sound effect https://freesound.org/people/bolkmar/sounds/434136/
+                playedGameOverSound = true;
+                MediaPlayer crashSound = MediaPlayer.create(getContext(), R.raw.crash);
+                crashSound.setVolume(0.3f, 0.3f);
+                crashSound.start();
+            }
+
         }
     }
 
@@ -277,8 +292,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
                 underCart = false;  //Initialize as false, not under a cart
 
                 //Make game slowly get more difficult the longer the player has been playing, currently every 10 seconds
-                int difficulty = (performance.getSeconds()/10);
-                cartList.add(new Cart(getContext(), player, tempX, tempY, 60, 40, 20+difficulty*10));
+                int difficulty = (performance.getSeconds()/15);
+                cartList.add(new Cart(getContext(), player, tempX, tempY, 60, 40, 20+difficulty*4));
                 tempCart = cartList.get(cartList.size() - 1); //last cart added
 
 
@@ -355,6 +370,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
                 cartIterator.remove();
                 //increase number of carts collected
                 player.incrementCartsCollected();
+
+                //Play sound effect https://freesound.org/people/Twiggie2000/sounds/366131/
+                MediaPlayer cartCollectedSound = MediaPlayer.create(getContext(), R.raw.cart_collected);
+                //cartCollectedSound.setVolume(0.3f, 0.3f);
+                cartCollectedSound.start();
             }
         }
 
@@ -385,14 +405,21 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
             }
         }
 
+
         //Check if player has carts and "collided" with the Cart Zone and increase number of carts left if so.
-        if( player.getCartsCollected() >= 0 &&
+        if( player.getCartsCollected() > 0 &&
             Utils.circleRectangleCollision(player.getPositionX(), player.getPositionY(), player.getRadius(),
                 cartZone.getPositionX(), cartZone.getPositionY(), cartZone.getWidth(), cartZone.getHeight())){
             //Increase the carts left by the amount the player has
             cartZone.setCartsLeft(cartZone.getCartsLeft() + player.getCartsCollected());
             //Set player's collected amount to 0 (no carts collected anymore)
             player.setCartsCollected(0);
+
+            //Play sound effect https://freesound.org/people/cgrote/sounds/133841/
+            MediaPlayer cartsReturnedSound = MediaPlayer.create(getContext(), R.raw.carts_returned);
+            cartsReturnedSound.setVolume(0.3f, 0.3f);
+            cartsReturnedSound.start();
+
         }
 
     }
