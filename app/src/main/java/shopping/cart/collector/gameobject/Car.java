@@ -1,4 +1,4 @@
-package com.example.shoppingcartcollector.gameobject;
+package shopping.cart.collector.gameobject;
 
 /*
 The Car class represents the cars that move across the screen, which the player may collide with.
@@ -9,14 +9,12 @@ Pickup image - https://opengameart.org/content/car-pickup
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.example.shoppingcartcollector.R;
+import shopping.cart.collector.R;
 
 import java.util.Random;
 

@@ -1,7 +1,6 @@
-package com.example.shoppingcartcollector;
+package shopping.cart.collector;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameLoop extends Thread{
@@ -33,14 +32,12 @@ public class GameLoop extends Thread{
     }
 
     public void startLoop() {
-        Log.d("GameLoop.java", "startLoop()");
         isRunning = true;
         start(); //Start a thread with thread class
     }
 
     @Override
     public void run() {
-        Log.d("GameLoop.java", "run()");
         super.run();
 
         //time and cycle count variables for displaying UPS and FPS
@@ -120,7 +117,6 @@ public class GameLoop extends Thread{
 
     //Stop running the game loop
     public void stopLoop() {
-        Log.d("GameLoop.java", "stopLoop()");
         isRunning = false;
 
         //wait for thread to join (return)

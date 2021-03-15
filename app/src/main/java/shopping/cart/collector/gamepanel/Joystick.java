@@ -1,15 +1,13 @@
-package com.example.shoppingcartcollector.gamepanel;
+package shopping.cart.collector.gamepanel;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
-import com.example.shoppingcartcollector.R;
-import com.example.shoppingcartcollector.Utils;
+import shopping.cart.collector.R;
+import shopping.cart.collector.Utils;
 
 public class Joystick {
 

@@ -1,4 +1,4 @@
-package com.example.shoppingcartcollector.gameobject;
+package shopping.cart.collector.gameobject;
 
 /*
 The Cart class represents all the shopping carts the player is supposed to collect
@@ -10,18 +10,14 @@ Image from here: https://opengameart.org/content/low-poly-shopping-cart
  */
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.example.shoppingcartcollector.GameLoop;
-import com.example.shoppingcartcollector.R;
+import shopping.cart.collector.GameLoop;
+import shopping.cart.collector.R;
 
 public class Cart extends GameObject{
 

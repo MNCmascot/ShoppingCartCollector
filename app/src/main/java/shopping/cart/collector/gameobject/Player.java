@@ -1,19 +1,18 @@
-package com.example.shoppingcartcollector.gameobject;
+package shopping.cart.collector.gameobject;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.example.shoppingcartcollector.GameLoop;
-import com.example.shoppingcartcollector.gamepanel.Joystick;
-import com.example.shoppingcartcollector.R;
-import com.example.shoppingcartcollector.Utils;
+import shopping.cart.collector.GameLoop;
+import shopping.cart.collector.gamepanel.Joystick;
+import shopping.cart.collector.R;
+import shopping.cart.collector.Utils;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -81,7 +80,7 @@ public class Player extends GameObject{
 
     public void incrementCartsCollected() {
         cartsCollected += 1;
-        Log.d("DEBUG", "Carts Collected: " + cartsCollected);
+        //Log.d("DEBUG", "Carts Collected: " + cartsCollected);
 
 
     }

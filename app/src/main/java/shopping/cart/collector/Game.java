@@ -1,31 +1,23 @@
-package com.example.shoppingcartcollector;
+package shopping.cart.collector;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
-import androidx.core.content.ContextCompat;
-
-import com.example.shoppingcartcollector.gameobject.Background;
-import com.example.shoppingcartcollector.gameobject.Cart;
-import com.example.shoppingcartcollector.gameobject.CartZone;
-import com.example.shoppingcartcollector.gameobject.GameObject;
-import com.example.shoppingcartcollector.gameobject.Player;
-import com.example.shoppingcartcollector.gameobject.Wall;
-import com.example.shoppingcartcollector.gameobject.Car;
-import com.example.shoppingcartcollector.gamepanel.GameOver;
-import com.example.shoppingcartcollector.gamepanel.Joystick;
-import com.example.shoppingcartcollector.gamepanel.Performance;
+import shopping.cart.collector.R;
+import shopping.cart.collector.gameobject.Background;
+import shopping.cart.collector.gameobject.Cart;
+import shopping.cart.collector.gameobject.CartZone;
+import shopping.cart.collector.gameobject.Player;
+import shopping.cart.collector.gameobject.Wall;
+import shopping.cart.collector.gameobject.Car;
+import shopping.cart.collector.gamepanel.GameOver;
+import shopping.cart.collector.gamepanel.Joystick;
+import shopping.cart.collector.gamepanel.Performance;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -175,7 +167,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.d("Game.java", "surfaceCreated()");
+       // Log.d("Game.java", "surfaceCreated()");
 
         if (gameLoop.getState().equals(Thread.State.TERMINATED)) {
             gameLoop = new GameLoop(this, holder);
@@ -185,12 +177,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.d("MainActivity.java", "surfaceChanged()");
+      //  Log.d("MainActivity.java", "surfaceChanged()");
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d("MainActivity.java", "surfaceDestroyed()");
+        //Log.d("MainActivity.java", "surfaceDestroyed()");
     }
 
 
@@ -273,7 +265,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         if (Cart.readyToSpawn()) {
             //decrease number of carts in store by 1
             cartZone.setCartsLeft(cartZone.getCartsLeft()-1);
-            Log.d("DEBUG", cartZone.getCartsLeft() + " carts left.");
+           // Log.d("DEBUG", cartZone.getCartsLeft() + " carts left.");
             //If no carts left, game over
             if (cartZone.getCartsLeft() <= 0) {
                 player.setDead(true);
@@ -329,7 +321,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
                 if (underCart || underJoystick|| underWall) { //under joystick or under wall, remove cart
                     cartList.remove(cartList.size()-1);
-                    Log.d("DEBUG", "cart spawned under something");
+                   // Log.d("DEBUG", "cart spawned under something");
                 }
 
             } while (underCart || underJoystick || underWall);

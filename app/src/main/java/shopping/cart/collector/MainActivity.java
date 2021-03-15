@@ -1,14 +1,14 @@
-package com.example.shoppingcartcollector;
+package shopping.cart.collector;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.Animator;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import shopping.cart.collector.R;
 
 public class MainActivity extends AppCompatActivity {
     Button playGame;
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("MainActivity.java", "onCreate()");
+        //Log.d("MainActivity.java", "onCreate()");
         super.onCreate(savedInstanceState);
         //Set content view to main menu
         setContentView(R.layout.mainmenu);
@@ -49,32 +49,32 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        Log.d("MainActivity.java", "onStart()");
+       // Log.d("MainActivity.java", "onStart()");
         super.onStart();
     }
 
     @Override
     protected void onResume() {
-        Log.d("MainActivity.java", "onResume()");
+       // Log.d("MainActivity.java", "onResume()");
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        Log.d("MainActivity.java", "onPause()");
+      //  Log.d("MainActivity.java", "onPause()");
         game.pause();
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        Log.d("MainActivity.java", "onStop()");
+       // Log.d("MainActivity.java", "onStop()");
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        Log.d("MainActivity.java", "onDestroy()");
+       // Log.d("MainActivity.java", "onDestroy()");
         super.onDestroy();
     }
 
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     //Back button
     @Override
     public void onBackPressed() {
-        Log.d("MainActivity.java", "onBackPressed()");
+      //  Log.d("MainActivity.java", "onBackPressed()");
 
         //return to title page on back press
         game.pause();

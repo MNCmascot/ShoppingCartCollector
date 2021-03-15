@@ -1,4 +1,4 @@
-package com.example.shoppingcartcollector.gameobject;
+package shopping.cart.collector.gameobject;
 
 /*
 GameObject abstract class for other basic objects to inherit from:
@@ -7,7 +7,7 @@ cars / carts / player
 
 import android.graphics.Canvas;
 
-import com.example.shoppingcartcollector.Utils;
+import shopping.cart.collector.Utils;
 
 public abstract class GameObject {
     protected double positionX;

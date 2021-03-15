@@ -1,21 +1,17 @@
-package com.example.shoppingcartcollector.gameobject;
+package shopping.cart.collector.gameobject;
 
 /*
 Background images used during gameplay
  */
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.example.shoppingcartcollector.R;
+import shopping.cart.collector.R;
 
 
 public class Background extends GameObject{

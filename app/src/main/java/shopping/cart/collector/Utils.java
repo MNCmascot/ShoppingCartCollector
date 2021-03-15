@@ -1,4 +1,4 @@
-package com.example.shoppingcartcollector;
+package shopping.cart.collector;
 
 public class Utils {
     public static double getDistanceBetweenPoints(double p1x, double p1y, double p2x, double p2y) {

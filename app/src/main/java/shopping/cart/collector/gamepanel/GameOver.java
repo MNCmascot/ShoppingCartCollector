@@ -1,4 +1,4 @@
-package com.example.shoppingcartcollector.gamepanel;
+package shopping.cart.collector.gamepanel;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,7 +6,7 @@ import android.graphics.Paint;
 
 import androidx.core.content.ContextCompat;
 
-import com.example.shoppingcartcollector.R;
+import shopping.cart.collector.R;
 
 /*
 Game over panel that draws Game Over to the screen.
