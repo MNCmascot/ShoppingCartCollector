@@ -1,8 +1,10 @@
 package shopping.cart.collector;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.media.MediaPlayer;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -15,6 +17,7 @@ import shopping.cart.collector.gameobject.CartZone;
 import shopping.cart.collector.gameobject.Player;
 import shopping.cart.collector.gameobject.Wall;
 import shopping.cart.collector.gameobject.Car;
+import shopping.cart.collector.gamepanel.GameDisplay;
 import shopping.cart.collector.gamepanel.GameOver;
 import shopping.cart.collector.gamepanel.Joystick;
 import shopping.cart.collector.gamepanel.Performance;
@@ -46,6 +49,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
     private long spawnTime;
 
     private boolean drawBackground = false;
+    private GameDisplay gameDisplay;
 
     public Game(Context context) {
         super(context);
@@ -69,7 +73,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
 
         //initialize Joystick panel
-        joystick = new Joystick(context, 275, 700, 70, 40);
+        joystick = new Joystick(context, 275, 500, 70, 40);
 
         //initialize performance panel (for drawing UPS and FPS)
         performance = new Performance(context, gameLoop);
@@ -79,6 +83,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
         //Initialize player
         player = new Player(context, joystick,1000, 500, 30);
+
+        //initialize game display to center around player
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        gameDisplay = new GameDisplay(displayMetrics.widthPixels, displayMetrics.heightPixels, player);
+
 
         //Initialize walls
         //Centre wall left
@@ -195,34 +205,32 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
         super.draw(canvas);
        // canvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
-       // if (!drawBackground){
-            background.draw(canvas);
-            //drawBackground=true;
-        //}
+
+        background.draw(canvas, gameDisplay);
+
 
         //display joystick
         joystick.draw(canvas);
         //display carts
         for (Cart cart: cartList) {
-            cart.draw(canvas);
+            cart.draw(canvas, gameDisplay);
         }
         //display player
-        player.draw(canvas);
+        player.draw(canvas, gameDisplay);
 
         //display walls
         /*
         for (Wall wall: wallList) {
-            wall.draw(canvas);
+            wall.draw(canvas, gameDisplay);
         }
          */
 
-
         //display cars
         for (Car car: carList) {
-            car.draw(canvas);
+            car.draw(canvas, gameDisplay);
         }
         //display CartZone (currently just draws carts left in store, background handles the rest)
-        cartZone.draw(canvas);
+        cartZone.draw(canvas, gameDisplay);
 
         //display UPS and FPS
         performance.draw(canvas);
@@ -414,7 +422,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback{
 
         }
 
-    }
+        //update game display coords
+        gameDisplay.update();
+
+    } //end of update
 
     //Pause the game when user exits
     public void pause() {

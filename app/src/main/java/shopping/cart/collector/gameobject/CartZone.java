@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import androidx.core.content.ContextCompat;
 
 import shopping.cart.collector.R;
+import shopping.cart.collector.gamepanel.GameDisplay;
 
 public class CartZone extends GameObject {
 
@@ -36,7 +37,7 @@ public class CartZone extends GameObject {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, GameDisplay gameDisplay) {
         //Draw how many carts are left in the store
         canvas.drawText("Carts left in store: " + cartsLeft, 300, 100, cartsTextPaint);
         //Draw the cartZone

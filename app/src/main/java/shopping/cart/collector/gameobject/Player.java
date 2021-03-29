@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import shopping.cart.collector.GameLoop;
+import shopping.cart.collector.gamepanel.GameDisplay;
 import shopping.cart.collector.gamepanel.Joystick;
 import shopping.cart.collector.R;
 import shopping.cart.collector.Utils;
@@ -85,32 +86,37 @@ public class Player extends GameObject{
 
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, GameDisplay gameDisplay) {
 
         //draw player
        // canvas.drawCircle((float)positionX, (float)positionY, (float)radius, paint);
+
+        //get player coords on screen
+        double screenX = gameDisplay.gameToDisplayX(positionX);
+        double screenY = gameDisplay.gameToDisplayY(positionY);
+
 
         //draw trailing carts
         canvas.save(); //save canvas state before rotating
 
         //rotate canvas in movement direction (to draw carts trailing behind)
-        canvas.rotate((float) moveAngle, (float) positionX, (float) positionY);
+        canvas.rotate((float) moveAngle, (float) screenX, (float) screenY);
 
 
         Rect playerBounds = canvas.getClipBounds();
-        playerBounds.left = (int)(positionX-radius);
-        playerBounds.top = (int)(positionY-radius);
-        playerBounds.right = (int)(positionX+radius);
-        playerBounds.bottom = (int)(positionY+radius);
+        playerBounds.left = (int)(screenX-radius);
+        playerBounds.top = (int)(screenY-radius);
+        playerBounds.right = (int)(screenX+radius);
+        playerBounds.bottom = (int)(screenY+radius);
         playerImage.setBounds(playerBounds);
         playerImage.draw(canvas);
 
         for (int i = 1; i <= cartsCollected; i++) {
             Rect imageBounds = canvas.getClipBounds();
-            imageBounds.left = (int)(positionX + 60*(i-1) + radius);
-            imageBounds.top = (int)(positionY - 20);
-            imageBounds.right = (int)(positionX + 60*i+ radius);
-            imageBounds.bottom = (int)(float) (positionY + 20);
+            imageBounds.left = (int)(screenX + 60*(i-1) + radius);
+            imageBounds.top = (int)(screenY - 20);
+            imageBounds.right = (int)(screenX + 60*i+ radius);
+            imageBounds.bottom = (int)(float) (screenY + 20);
             cartImage.setBounds(imageBounds);
             cartImage.draw(canvas);
 

@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import androidx.core.content.res.ResourcesCompat;
 
 import shopping.cart.collector.R;
+import shopping.cart.collector.gamepanel.GameDisplay;
 
 import java.util.Random;
 
@@ -47,12 +48,17 @@ public class Car extends GameObject{
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, GameDisplay gameDisplay) {
+
+        //get car coords on screen relative to player
+        double screenX = gameDisplay.gameToDisplayX(positionX);
+        double screenY = gameDisplay.gameToDisplayY(positionY);
+
         Rect imageBounds = canvas.getClipBounds();
-        imageBounds.left = (int)positionX;
-        imageBounds.top = (int)positionY;
-        imageBounds.right = (int)(positionX+width);
-        imageBounds.bottom = (int)(positionY + height);
+        imageBounds.left = (int)screenX;
+        imageBounds.top = (int)screenY;
+        imageBounds.right = (int)(screenX+width);
+        imageBounds.bottom = (int)(screenY + height);
         myImage.setBounds(imageBounds);
         myImage.draw(canvas);
         //canvas.drawRect((float)positionX, (float)positionY,

@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import androidx.core.content.res.ResourcesCompat;
 
 import shopping.cart.collector.R;
+import shopping.cart.collector.gamepanel.GameDisplay;
 
 
 /*
@@ -37,12 +38,17 @@ public class Wall extends GameObject{
 
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, GameDisplay gameDisplay) {
+
+        //get wall coords on screen relative to player position
+        double screenX = gameDisplay.gameToDisplayX(positionX);
+        double screenY = gameDisplay.gameToDisplayY(positionY);
+
         Rect imageBounds = canvas.getClipBounds();
-        imageBounds.left = (int)positionX;
-        imageBounds.top = (int)positionY;
-        imageBounds.right = (int)(positionX+width);
-        imageBounds.bottom = (int)(positionY + height);
+        imageBounds.left = (int)screenX;
+        imageBounds.top = (int)screenY;
+        imageBounds.right = (int)(screenX+width);
+        imageBounds.bottom = (int)(screenY + height);
         myImage.setBounds(imageBounds);
         myImage.draw(canvas);
 

@@ -8,6 +8,7 @@ cars / carts / player
 import android.graphics.Canvas;
 
 import shopping.cart.collector.Utils;
+import shopping.cart.collector.gamepanel.GameDisplay;
 
 public abstract class GameObject {
     protected double positionX;
@@ -34,7 +35,7 @@ public abstract class GameObject {
     }
 
 
-    public abstract void draw(Canvas canvas);
+    public abstract void draw(Canvas canvas, GameDisplay gameDisplay);
     public abstract void update();
 
     //Get X position of GameObject
