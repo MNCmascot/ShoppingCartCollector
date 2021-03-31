@@ -20,8 +20,8 @@ public class GameOver {
     }
     public void draw(Canvas canvas) {
         String text = "Game Over";
-        float x = 1178;
-        float y = 230;
+        float x = 400;
+        float y = 210;
 
         //set up game over colour
         Paint paint = new Paint();

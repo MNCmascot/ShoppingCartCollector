@@ -7,7 +7,7 @@ android {
         applicationId "shopping.cart.collector"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 3
+        versionCode 4
         versionName 'Cart Collector Simulator'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
